@@ -15,11 +15,14 @@ export const checkUser = async (req, res, next) => {
         email,
       },
     });
+    
     if (!user) {
-      return res.status(404).json({ message: "User not found", status: false });
+      return res.send(user);
+      // return res.status(404).json({ message: "User not found", status: false, data: user });
     }
     else{
-      return res.status(200).json({ message: "User found", status: true, data: user });
+      return res.send(user);
+      // return res.status(200).json({ message: "User found", status: true, data: user });
     }
   } catch (error) {
     console.error(error);

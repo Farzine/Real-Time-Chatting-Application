@@ -5,22 +5,41 @@ import { FcGoogle} from "react-icons/fc";
 import {useRouter} from "next/router";
 import axios from 'axios';
 import { CHECK_USER_ROUTE } from "../utils/ApiRoutes.js";
+import { useStateProvider } from "../context/StateContext.jsx";
+import { reducerCases } from "../context/constants.js";
 
 
 function login() {
   const router = useRouter();
+
+  const [{},dispatch] = useStateProvider();
+
   const handleLogin = async() => {
     alert("Login with Google");
     const provider = new GoogleAuthProvider();
     const {user:{displayName:name,email,photoURL:profileImage}} = await signInWithPopup(firebaseAuth, provider);
     try{
-      // console.log({name,email,profileImage});
       if(email){
-        const {data} = await axios.post(CHECK_USER_ROUTE,{email});
-        console.log(data.message);
-
-        if(!data.status){
+        const response = await axios.post(CHECK_USER_ROUTE,{email});
+        
+        if(!response.data){
+          dispatch({
+            type:reducerCases.SET_NEW_USER,
+            newUser:true,
+          });
+          dispatch({
+            type:reducerCases.SET_USER_INFO,
+            userInfo:{
+              name,
+              email,
+              profileImage,
+              status: "",
+            },
+          });
           router.push("/onboarding");
+        }
+        else{
+          console.log("User found");
         }
       }
     }
@@ -29,7 +48,7 @@ function login() {
     }
   };
   return( 
-  <div className="flex justify-center items-center bg bg-panel-header-background h-screen w-screen flex-col gap-6">login
+  <div className="flex justify-center items-center bg bg-panel-header-background h-screen w-screen flex-col gap-6">
   <div className="flex items-center justify-center gap-2 text-white "> 
   <img src="/Whisper.png " alt="Whisper_app_logo" style={{ width: '200px', height: '200px'}}/>
   <span className="text-7xl text-white" >Whisper</span>
