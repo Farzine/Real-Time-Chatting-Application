@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* .bg-panel-background {
+    --tw-bg-opacity: 1;
+    background-color: rgb(155 160 163);
+} */
