@@ -25,7 +25,28 @@ export const checkUser = async (req, res, next) => {
       // return res.status(200).json({ message: "User found", status: true, data: user });
     }
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
+    next(error);
   }
 }; 
+
+export const onBoardUser = async (req, res, next) => {
+try {
+  const { email, name, about, image:profilePicture } = req.body;
+  if (!name || !about || !email || !profilePicture) {
+    return res.send("All fields are required");
+  }
+  const prisma = getPrismaInstance();
+  const user = await prisma.user.create({
+    data: {
+      name,
+      about,
+      email,
+      profilePicture,
+    },
+  });
+  return res.json({ message: "User created", status: true , user});
+}
+catch (error) {
+  next(error);
+}
+};

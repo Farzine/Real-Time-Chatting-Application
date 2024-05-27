@@ -1,37 +1,89 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {FaCamera} from "react-icons/fa";
 import {useState} from "react";
 import ContextMenu from "./ContextMenu.jsx";
+import PhotoPicker from "./PhotoPicker.jsx";
+import PhotoLibrary from "./PhotoLibrary.jsx";
+import CapturePhoto from "./CapturePhoto.jsx";
+
 
 function Avatar({type, image,setImage}) {
 
   const [hover, setHover] = useState(false);
   const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({x:0, y:0});
+  const [grabPhoto, setGrabPhoto] = useState(false);
+  const [showPhotoLibrary, setShowPhotoLibrary] = useState(false);
+  const [showCapturePhoto, setShowCapturePhoto] = useState(false);
+
   const showContextMenu = (e) => {
     e.preventDefault();
     setContextMenuPosition({x:e.pageX, y:e.pageY});
     setIsContextMenuVisible(true);
-  }
+  };
+
+  useEffect(() => {
+    if(grabPhoto){
+      const data = document.getElementById("photo-picker");
+      data.click();
+      document.body.onfocus = (e) => {
+        setTimeout(() => {
+          setGrabPhoto(false);
+        }, 1000);
+      }
+    }
+  },[grabPhoto]);
+
   const contextMenuOptions = [
-    {name: "Take Photo",callback: ()=> {}},
-    {name: "Choose from File",callback: ()=> {}},
-    {name: "Upload Photo",callback: ()=> {}},
-    {name: "Remove Photo",callback: ()=> {}},
+    {
+      name: "Take Photo",callback: ()=> {
+      setShowCapturePhoto(true);
+      }
+    },
+    {
+      name: "Choose from Library",callback: ()=> {
+      setShowPhotoLibrary(true);
+      }
+    },
+    {
+      name: "Upload Photo",callback: ()=> {
+      setGrabPhoto(true);
+      }
+    },
+    {
+      name: "Remove Photo",callback: ()=> {
+      setImage("/default_avatar.png");
+      }
+    },
   ];
+
+  const photoPickerChange =async (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    const data = document.createElement("img");
+    reader.onloadend = function(event){
+      data.src = event.target.result;
+      data.setAttribute("data-src", event.target.result);
+
+    }
+    reader.readAsDataURL(file);
+    setTimeout(() => {
+      setImage(data.src);
+    }, 100);
+  }
   return <>
   <div className="felx items-center justify-center">
     {
       type === "sm" && (
       <div className="relative h-10 w-10">
-        <img src = {image} alt="avatar" className="rounded-full" />
+        <img src = {image} alt="avatar" className="rounded-full object-cover h-full w-full" />
       </div>
     )}
     
     {
       type === "lg" && (
       <div className="relative h-14 w-14">
-        <img src = {image} alt="avatar" className="rounded-full"  />
+        <img src = {image} alt="avatar" className="rounded-full object-cover h-full w-full"  />
       </div>
     )}
      {
@@ -47,7 +99,7 @@ function Avatar({type, image,setImage}) {
             <span onClick={e=> showContextMenu(e)}id = "context-opener"  >Change Photo</span>
           </div>
           <div className="h-60 w-60 ">
-            <img src = {image} alt="avatar" className="rounded-full"  />
+            <img src = {image} alt="avatar" className="rounded-full object-cover h-full w-full"  />
           </div>
         </div>
     )}
@@ -59,6 +111,9 @@ function Avatar({type, image,setImage}) {
     contextMenu={isContextMenuVisible}
     setContextMenu={setIsContextMenuVisible}
     />)}
+    {showCapturePhoto && <CapturePhoto setImage={setImage} hide={setShowCapturePhoto} />}
+    {showPhotoLibrary && <PhotoLibrary setImage={setImage} hidePhotoLibrary ={setShowPhotoLibrary} />}
+    {grabPhoto && <PhotoPicker onChange={photoPickerChange}/> }
   </>;
 }
 

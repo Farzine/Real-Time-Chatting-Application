@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }) {
       <title>Whisper</title>
       <link rel="shortcut icon" href="/Whisper.png " />
     </Head>
-    <Component {...pageProps} />;
+    <Component {...pageProps} />
     </StateProvider>
   ); 
   

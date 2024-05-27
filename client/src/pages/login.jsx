@@ -1,6 +1,6 @@
 import { firebaseAuth } from "../utils/FirebaseConfig.js";
 import {  getAuth,signInWithPopup,GoogleAuthProvider } from 'firebase/auth';
-import React from "react";
+import React, { useEffect } from "react";
 import { FcGoogle} from "react-icons/fc";
 import {useRouter} from "next/router";
 import axios from 'axios';
@@ -12,7 +12,14 @@ import { reducerCases } from "../context/constants.js";
 function login() {
   const router = useRouter();
 
-  const [{},dispatch] = useStateProvider();
+  const [{userInfo,newUser},dispatch] = useStateProvider();
+
+  useEffect(() => {
+  if(!newUser && userInfo?.id){
+    router.push("/");
+  }
+  },[userInfo,newUser]);
+
 
   const handleLogin = async() => {
     alert("Login with Google");
@@ -20,9 +27,9 @@ function login() {
     const {user:{displayName:name,email,photoURL:profileImage}} = await signInWithPopup(firebaseAuth, provider);
     try{
       if(email){
-        const response = await axios.post(CHECK_USER_ROUTE,{email});
+        const data = await axios.post(CHECK_USER_ROUTE,{email});
         
-        if(!response.data){
+        if(!data.data){
           dispatch({
             type:reducerCases.SET_NEW_USER,
             newUser:true,
@@ -39,7 +46,18 @@ function login() {
           router.push("/onboarding");
         }
         else{
-          console.log("User found");
+          const {id,name,email,profilePicture:profileImage,status}= data.data;
+          dispatch({
+            type:reducerCases.SET_USER_INFO,
+            userInfo:{
+              id,
+              name,
+              email,
+              profileImage,
+              status,
+            },
+          });
+          router.push("/");
         }
       }
     }
@@ -53,7 +71,7 @@ function login() {
   <img src="/Whisper.png " alt="Whisper_app_logo" style={{ width: '200px', height: '200px'}}/>
   <span className="text-7xl text-white" >Whisper</span>
   </div>
-  <button className="flex items-center justify-center gap-7 bg-search-input-container-background p-5 rounded-lg" onClick={handleLogin}>
+  <button className="flex items-center justify-center gap-3 bg-search-input-container-background p-4 rounded-full" onClick={handleLogin}>
   <FcGoogle className="text-4xl"/>
   <span className="text-white text-2xl">Login with Google</span>
   </button>
