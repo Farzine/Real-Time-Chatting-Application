@@ -5,6 +5,7 @@ import { GET_ALL_CONTACTS } from "../../utils/ApiRoutes";
 import { useStateProvider } from "../../context/StateContext";
 import { BiArrowBack,BiSearchAlt2 } from "react-icons/bi";
 import { reducerCases } from "@/context/constants";
+import ChatListItem from "./ChatListItem";
 
 
 function ContactsList() {
@@ -49,7 +50,14 @@ function ContactsList() {
           <div key={Date.now()+initialLetter} >
            <div className="text-teal-light pl-10 py-5">
             {initialLetter}
-            </div> 
+            </div>
+             {
+              userList.map(contact=>{
+                return (<ChatListItem data={contact} key={contact.id} isContactPage={true}/>);
+              })
+
+             }
+             
           </div>
         )
       } )
