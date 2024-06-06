@@ -4,16 +4,17 @@ import Empty from "./Empty";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import axios from "axios";
-import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
+import { CHECK_USER_ROUTE, GET_MESSAGES_ROUTE } from "@/utils/ApiRoutes";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 import Chat from "./Chat/Chat";
 
+
 function Main() {
   const router = useRouter();
-  const [{userInfo},dispatch] = useStateProvider();
+  const [{userInfo,currentChatUser},dispatch] = useStateProvider();
   const [redirectLogin,setRedirectLogin] = useState(false);
 
   useEffect(() => {
@@ -42,16 +43,30 @@ function Main() {
           profileImage,
           status,
         },
-      });
+      }); 
     }
     }
-  }
-  );
+  });
+
+  useEffect(() => {
+    const getMessages = async() => {
+    const {data:{messages}} = await axios.get(`${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`);
+     dispatch({
+       type:reducerCases.SET_MESSAGES,
+       messages,
+     });
+    }
+    if(currentChatUser?.id){
+      getMessages();
+    }
+  } ,[currentChatUser]);
+
   return <>
   <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden"> 
   <ChatList/>
-  {/* <Empty/> */}
-  <Chat/>
+  {
+    currentChatUser ? <Chat/> : <Empty/>
+  }
   </div>
   </>;
 }
