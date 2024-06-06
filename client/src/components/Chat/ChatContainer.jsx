@@ -1,6 +1,7 @@
 import React from "react";
 import { useStateProvider } from "@/context/StateContext";
 import { calculateTime } from "@/utils/CalculateTime";
+import MessageStatus from "../common/MessageStatus";
 
 function ChatContainer() {
 
@@ -23,6 +24,11 @@ function ChatContainer() {
             <span className="text-bubble-meta text-[11px] pt-1 min-w-fit">
               {
                 calculateTime(message.createdAt)
+              }
+            </span>
+            <span>
+              {
+                message.senderId === userInfo.id && < MessageStatus messageStatus = {message.messageStatus}/>
               }
             </span>
            </div>

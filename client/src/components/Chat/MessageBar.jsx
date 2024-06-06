@@ -7,10 +7,11 @@ import { useState } from "react";
 import { useStateProvider } from "@/context/StateContext";
 import { ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import axios from "axios";
+import { reducerCases } from "@/context/constants";
 
 
 function MessageBar() {
-  const [{userInfo,currentChatUser},dispatch] = useStateProvider();
+  const [{userInfo,currentChatUser,socket},dispatch] = useStateProvider();
   const [message, setMessage] = useState("");
   const sendMessage = async() => {
     // alert(message);
@@ -21,7 +22,14 @@ function MessageBar() {
         from: userInfo?.id,
         message,
       });
-      console.log("Message sent, response:", data);
+      socket.current.emit("send-msg",{message:data.message, to: currentChatUser?.id, from: userInfo?.id});
+      dispatch({
+        type:reducerCases.ADD_MESSAGE,
+        newMessage:{
+          ...data.message,
+        },
+        fromSelf:true,
+      });
       setMessage("");
      }
      catch(err){
