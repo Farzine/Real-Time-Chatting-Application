@@ -17,6 +17,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
+app.use("/uploads/recordings", express.static("uploads/recordings"));
 app.use("/uploads/images", express.static("uploads/images"));
 
 app.use("/api/auth", AuthRoutes);
