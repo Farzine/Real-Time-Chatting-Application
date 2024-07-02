@@ -2,7 +2,7 @@ import React from "react";
 import { useStateProvider } from "@/context/StateContext";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
-import ImageMessage from "./ImageMessage";
+import ImageMessage from "../Chat/ImageMessage";
 import dynamic from "next/dynamic";
 
 const VoiceMessage = dynamic(() => import("./VoiceMessage"), { ssr: false });

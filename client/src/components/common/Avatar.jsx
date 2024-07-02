@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import {FaCamera} from "react-icons/fa";
 import {useState} from "react";
-import ContextMenu from "./ContextMenu.jsx";
-import PhotoPicker from "./PhotoPicker.jsx";
-import PhotoLibrary from "./PhotoLibrary.jsx";
-import CapturePhoto from "./CapturePhoto.jsx";
+import ContextMenu from "../common/ContextMenu";
+import PhotoPicker from "../common/PhotoPicker";
+import PhotoLibrary from "../common/PhotoLibrary";
+import CapturePhoto from "../common/CapturePhoto";
 
 
 function Avatar({type, image,setImage}) {

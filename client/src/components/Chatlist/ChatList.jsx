@@ -1,6 +1,6 @@
 import React from "react";
 import SearchBar from "../Chatlist/SearchBar";
-import List from "./List";
+import List from "../Chatlist/List";
 import ChatListHeader from "../Chatlist/ChatListHeader";
 import { useStateProvider } from "../../context/StateContext";
 import { useState,useEffect } from "react";
