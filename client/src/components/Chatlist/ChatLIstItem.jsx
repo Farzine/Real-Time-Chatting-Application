@@ -2,13 +2,28 @@ import React from "react";
 import Avatar from "../common/Avatar";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
+import { calculateTime } from "@/utils/CalculateTime";
 
 
 function ChatLIstItem({data, isContactPage = false}) {
   const [{userInfo,currentChatUser},dispatch] = useStateProvider();
   const handleContactClick =() => {
-    dispatch({type:reducerCases.CHANGE_CURRENT_CHAT_USER, user:{...data}})
-    dispatch({type:reducerCases.SET_ALL_CONTACTS_PAGE})
+    if(!isContactPage){
+      dispatch({
+        type: reducerCases.CHANGE_CURRENT_CHAT_USER,
+        user:{
+          name: data.name,
+          about: data.about,
+          profilePicture: data.profilePicture,
+          email: data.email,
+          id: userInfo.id === data.senderId ? data.recieverId : data.senderId,
+        }
+      })
+    }
+    else{
+      dispatch({type:reducerCases.CHANGE_CURRENT_CHAT_USER, user:{...data}}) 
+      dispatch({type:reducerCases.SET_ALL_CONTACTS_PAGE})
+    }
   };
   return (
   <div className={`flex cursor-pointer items-center hover:bg-background-default-hover`} onClick={handleContactClick}>
@@ -20,6 +35,15 @@ function ChatLIstItem({data, isContactPage = false}) {
       <div>
         <span className="text-white">{data?.name}</span>
       </div>
+       {
+        !isContactPage && (
+          <div>
+            <span className={`${!data.totalUnreadMessages>0 ? "text-secondary":"text-icon-green"} text-sm`}>
+              {calculateTime(data.createdAt)}
+            </span>
+          </div>
+        )
+       }
     </div>
     <div className="flex border-b border-conversation-border pb-2 pt-1 p3-2">
     <div className="flex justify-between w-full">
