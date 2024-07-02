@@ -1,10 +1,10 @@
 import React from "react";
-import SearchBar from "./SearchBar";
+import SearchBar from "../Chatlist/SearchBar";
 import List from "./List";
-import ChatListHeader from "./ChatListHeader";
+import ChatListHeader from "../Chatlist/ChatListHeader";
 import { useStateProvider } from "../../context/StateContext";
 import { useState,useEffect } from "react";
-import ContactsList from "./ContactsList";
+import ContactsList from "../Chatlist/ContactsList";
 
 function ChatList() {
   const [{contactsPage}] = useStateProvider();

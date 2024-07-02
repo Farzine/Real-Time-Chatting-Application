@@ -5,7 +5,7 @@ import { GET_ALL_CONTACTS } from "../../utils/ApiRoutes";
 import { useStateProvider } from "../../context/StateContext";
 import { BiArrowBack,BiSearchAlt2 } from "react-icons/bi";
 import { reducerCases } from "@/context/constants";
-import ChatListItem from "./ChatListItem";
+import ChatListItem from "../Chatlist/ChatListItem";
 
 
 function ContactsList() {
