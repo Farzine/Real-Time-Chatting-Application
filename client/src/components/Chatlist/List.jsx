@@ -3,7 +3,7 @@ import { reducerCases } from "@/context/constants";
 import { GET_INITIAL_CONTACTS_ROUTE } from "@/utils/ApiRoutes";
 import axios from "axios";
 import React from "react";
-import ChatLIstItem from "./ChatLIstItem";
+import ChatListItem from "./ChatListItem";
 import { useEffect } from "react";
 
 function List() {
@@ -34,7 +34,7 @@ function List() {
   return (
   <div className="bg-search-input-container-background flex-auto overflow-auto max-h-full custom-scrollbar">
    {
-    userContacts.map((contact)=> <ChatLIstItem data={contact} key={contact.id}/>)
+    userContacts.map((contact)=> <ChatListItem data={contact} key={contact.id}/>)
    } 
   </div>);
 }

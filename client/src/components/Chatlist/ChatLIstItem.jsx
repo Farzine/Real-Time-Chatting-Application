@@ -5,7 +5,7 @@ import { reducerCases } from "@/context/constants";
 import { calculateTime } from "@/utils/CalculateTime";
 
 
-function ChatLIstItem({data, isContactPage = false}) {
+function ChatListItem({data, isContactPage = false}) {
   const [{userInfo,currentChatUser},dispatch] = useStateProvider();
   const handleContactClick =() => {
     if(!isContactPage){
@@ -54,4 +54,4 @@ function ChatLIstItem({data, isContactPage = false}) {
   </div>);
 }
 
-export default ChatLIstItem;
+export default ChatListItem;
